@@ -1,0 +1,41 @@
+﻿
+<div class="card-grid__container ${model.ContainerClass}">
+    <div class="ornament">
+        <ul class="ornament__elements">
+            <li class="titleLeftStart decoration"></li>
+            <li class="titleLeftMiddle middle__line"></li>
+            <li class="titleLeftEnd decoration"></li>
+
+            <li class="titleContent">
+                <div class="hasHeroPage">
+
+                    <img class="class-ornament"
+                         src="/svg/ornaments/${model.Class.OrnamentSvgPath}"
+                         alt="">
+
+                    <span class="class-header__title">
+                        ${model.Class.Name}
+                    </span>
+
+                </div>
+            </li>
+
+            <li class="titleRightStart decoration end"></li>
+            <li class="titleRightMiddle middle__line"></li>
+            <li class="titleRightEnd decoration"></li>
+        </ul>
+    </div>
+
+    <div class="card-grid">
+        $foreach(var card in model.Cards)
+            <a class="card-link" href="#" data-card-slug="${card.Slug}">
+                <div class="card">
+                    <img
+                        src="${card.ImageUrl}"
+                        alt="${card.Name}"
+                    >
+                </div>
+            </a>
+        $endfor
+    </div>
+</div>

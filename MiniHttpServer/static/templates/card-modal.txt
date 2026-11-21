@@ -1,0 +1,36 @@
+<div class="modal__dialog" role="dialog" aria-modal="true" aria-label="${model.Card.Name}">
+
+    <button class="modal__close" type="button" data-modal-close aria-label="Закрыть">&times;</button>
+
+    $if(model.PrevSlug != "")
+    <button class="modal__arrow modal__arrow--prev" type="button"
+            data-card-slug="${model.PrevSlug}" aria-label="Предыдущая карта"></button>
+    $endif
+
+    <div class="modal__card">
+        <img src="${model.Card.ImageUrl}" alt="${model.Card.Name}">
+    </div>
+
+    <div class="modal__info">
+        <h3 class="modal__title">${model.Card.Name}</h3>
+        <p class="modal__flavor">${model.Card.FlavorText}</p>
+        <p class="modal__text">${model.Card.Description}</p>
+
+        <ul class="modal__facts">
+            <li><b>Тип:</b> ${model.CardTypeName}</li>
+            <li><b>Редкость:</b> ${model.RarityName}</li>
+            <li><b>Набор:</b> ${model.CardSetName}</li>
+            <li><b>Класс:</b> ${model.Class.Name}</li>
+            <li><b>Стоимость:</b> ${model.Card.ManaCost}</li>
+            <li><b>Художник:</b> ${model.Card.ArtistName}</li>
+            $if(model.Card.IsCollectible)
+            <li><b>Коллекционная</b></li>
+            $endif
+        </ul>
+    </div>
+
+    $if(model.NextSlug != "")
+    <button class="modal__arrow modal__arrow--next" type="button"
+            data-card-slug="${model.NextSlug}" aria-label="Следующая карта"></button>
+    $endif
+</div>
