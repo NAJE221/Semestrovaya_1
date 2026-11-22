@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace MiniHttpServer.Framework.Framework.Services;
+namespace MiniHttpServer.Framework.Framework.Content;
 
-public abstract class MimeTypeCheckerService
+public static class MimeTypeChecker
 {
     public static void CheckMimeType(HttpListenerResponse response, FileInfo fileInfo)
     {

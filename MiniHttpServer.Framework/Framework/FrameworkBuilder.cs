@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using MiniHttpServer.Framework.Framework.Abstractions;
+using MiniHttpServer.Framework.Framework.Configuration;
 using MiniHttpServer.Framework.Framework.Factories;
 using MiniHttpServer.Framework.Framework.Handlers;
-using MiniHttpServer.Framework.Framework.Options;
 using MiniHttpServer.Framework.Framework.Routing;
 using MiniHttpServer.Framework.Framework.Services;
 using MiniHttpServer.Framework.Framework.Storages;
@@ -13,7 +13,7 @@ public class FrameworkBuilder
 {
     public readonly HttpServer Server;
 
-    private FrameworkBuilder(ServerOptions serverOptions, AppStorage  storage)
+    private FrameworkBuilder(ServerSettings serverSettings, AppStorage storage)
     {
         RouteRegistry.Register();
         
@@ -28,12 +28,12 @@ public class FrameworkBuilder
             fileHandler,
             controllerHandler);
 
-        var prefix = UriFactory.CreateUri(serverOptions).Uri;
+        var prefix = UriFactory.CreateUri(serverSettings).Uri;
 
        
         listener.Prefixes.Add(prefix.ToString());
             
-        Server = new HttpServer(listener , chain , serverOptions);
+        Server = new HttpServer(listener , chain , serverSettings);
     }
 
     public static async Task<FrameworkBuilder> CreateBuilder(
@@ -41,8 +41,8 @@ public class FrameworkBuilder
         string sectionName, 
         AppStorage storage)
     {
-        var options = await ConfigurationLoaderService.Load(filePath, sectionName);
+        var settings = await JsonConfigurationLoader.LoadAsync<ServerSettings>(filePath, sectionName);
 
-        return new FrameworkBuilder(options , storage);
+        return new FrameworkBuilder(settings , storage);
     }
 }

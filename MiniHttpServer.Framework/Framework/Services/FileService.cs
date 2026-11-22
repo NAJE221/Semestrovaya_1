@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using MiniHttpServer.Framework.Framework.Content;
 
 namespace MiniHttpServer.Framework.Framework.Services;
 
@@ -12,7 +13,7 @@ public static class FileService
         
         var buffer = await File.ReadAllBytesAsync(filePath);
         FileInfo fileInfo = new(filePath);
-        MimeTypeCheckerService.CheckMimeType(context.Response , fileInfo);
+        MimeTypeChecker.CheckMimeType(context.Response , fileInfo);
         
         await Push(buffer, context);
     }

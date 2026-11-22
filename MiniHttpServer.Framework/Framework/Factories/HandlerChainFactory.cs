@@ -2,7 +2,7 @@
 
 namespace MiniHttpServer.Framework.Framework.Factories;
 
-public class HandlerChainFactory()
+public static class HandlerChainFactory
 {
     public static Handler AssembleChain(params Handler[] handlers)
     {

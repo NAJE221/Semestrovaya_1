@@ -1,16 +1,16 @@
-﻿using MiniHttpServer.Framework.Framework.Options;
+﻿using MiniHttpServer.Framework.Framework.Configuration;
 
 namespace MiniHttpServer.Framework.Framework.Factories;
 
 public static class UriFactory
 {
-    public static UriBuilder CreateUri(ServerOptions serverOptions)
+    public static UriBuilder CreateUri(ServerSettings serverSettings)
     {
         UriBuilder uriBuilder = new()
         {
             Scheme = "http",
-            Host = serverOptions.Host,
-            Port = serverOptions.Port,
+            Host = serverSettings.Host,
+            Port = serverSettings.Port,
         };
 
         return uriBuilder;

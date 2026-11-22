@@ -1,7 +1,7 @@
-﻿namespace MiniHttpServer.Framework.Framework.Options;
+﻿namespace MiniHttpServer.Framework.Framework.Configuration;
 
 
-public class ServerOptions
+public class ServerSettings
 {
     public string Host { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 8080;

@@ -1,10 +1,9 @@
 {
   "Server": {
-    "Host": "*",
+    "Host": "http://0.0.0.0:8080",
     "Port": 8080,
     "Path": "hearthstone"
   },
-
   "DatabaseServerOptions": {
     "Host": "db",
     "Port": 5432,

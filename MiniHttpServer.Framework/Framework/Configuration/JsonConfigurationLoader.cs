@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-namespace MiniHttpServer.Services;
+namespace MiniHttpServer.Framework.Framework.Configuration;
 
-public static class DataDeserializerService
+public static class JsonConfigurationLoader
 {
-    public static async Task<T> DeserializeAsync<T>(
+    public static async Task<T> LoadAsync<T>(
         string filePath,
         string sectionName,
         CancellationToken cancellationToken = default)

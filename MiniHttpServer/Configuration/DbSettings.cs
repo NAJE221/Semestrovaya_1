@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MiniHttpServer.Options;
+namespace MiniHttpServer.Configuration;
 
-public class DbOptions
+public class DbSettings
 {
     public string Host { get; set; } = string.Empty;
     public int Port { get; set; } = 5432;

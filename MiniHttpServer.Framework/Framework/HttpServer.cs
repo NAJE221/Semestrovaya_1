@@ -1,43 +1,63 @@
 ﻿using System.Net;
 using MiniHttpServer.Framework.Framework.Abstractions;
-using MiniHttpServer.Framework.Framework.Options;
-using MiniHttpServer.Framework.Framework.Terminal;
+using MiniHttpServer.Framework.Framework.Configuration;
 
 namespace MiniHttpServer.Framework.Framework;
 
 public class HttpServer (
     HttpListener listener, 
     Handler handler,
-    ServerOptions serverOptions)
+    ServerSettings serverSettings)
 {
     
-    private void StartServer()
+    private Task? _listenTask;
+    public bool Listening => listener.IsListening;
+    
+    public readonly HttpListenerPrefixCollection Prefixes = listener.Prefixes; 
+    
+    public readonly ServerSettings ServerSettings = serverSettings;
+    
+    public void Start()
     {
-        while (!listener.IsListening)
+        if (Listening) return;
+        try
         {
-            TerminalUi.PrintMenu();
-            TerminalCommand.CommandProcessing(listener , serverOptions);
-            TerminalUi.PrintSuccessfulStart(listener , serverOptions);
+            listener.Start();
         }
+        catch (Exception)
+        {
+            throw new Exception("Проверьте конфигурационный файл. " +
+                                "Текущие настройки сервера: " +
+                                $"{ServerSettings}");
+        }
+        _listenTask = ListenAsync();
+    }
+
+    public async Task StopAsync()
+    {
+       if  (!Listening) return;
+       
+       listener.Stop();
+       
+       if (_listenTask is not null)
+           await _listenTask;
     }
 
     private async Task ListenAsync()
     {
-        try
+        while (Listening)
         {
-            while (listener.IsListening)
+            HttpListenerContext context;
+            try
             {
-                var context = await listener.GetContextAsync(); 
-                _ = ProcessRequestAsync(context);
+                context = await listener.GetContextAsync();
             }
-        }
-        catch (HttpListenerException)
-        {
-            Console.WriteLine("Ошибка обработана");
-        }
-        finally
-        {
-            listener.Close();
+            catch (Exception ex) when (ex is HttpListenerException or ObjectDisposedException)
+            {
+                break;                 
+            }
+
+            _ = ProcessRequestAsync(context);
         }
     }
 
@@ -66,23 +86,5 @@ public class HttpServer (
         {
             Console.WriteLine($"Не удалось отправить ответ: {ex.Message}");
         }
-    }
-
-    private void ListenTerminal()
-    {
-        while (listener.IsListening)
-        {
-            TerminalCommand.CommandProcessing(listener,  serverOptions);
-        }
-    }
-    
-    public async Task RunAsync()
-    {
-        StartServer();
-
-        var taskCommandProcessing = Task.Run(ListenTerminal);
-        var taskListenAsync = ListenAsync();
-        
-        await Task.WhenAll(taskListenAsync, taskCommandProcessing);
     }
 }
