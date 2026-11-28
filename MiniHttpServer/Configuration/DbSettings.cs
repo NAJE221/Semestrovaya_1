@@ -9,8 +9,8 @@ public class DbSettings
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string DataBase { get; set; } = string.Empty;
-    
+
     [JsonIgnore]
-    public string ConnectionString 
+    public string ConnectionString
         => $"Host={Host};Port={Port};Username={Username};Password={Password};Database={DataBase}";
 }

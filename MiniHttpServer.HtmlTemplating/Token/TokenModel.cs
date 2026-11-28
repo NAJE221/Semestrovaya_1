@@ -1,7 +1,7 @@
 ﻿namespace MiniHttpServer.HtmlTemplating.Token;
 
 /// <summary>
-/// Модель токена: тип и значение.
+///     Модель токена: тип и значение.
 /// </summary>
 public class TokenModel(TokenType type, string value)
 {

@@ -54,8 +54,7 @@ public class RenderToFileTests
         var to = Path.Combine(Directory.GetCurrentDirectory(), "missingTarget.html");
 
         // Act & Assert
-        Assert.ThrowsExactly<FileNotFoundException>(
-            () => _renderer.RenderToFile(from, to, new { Name = "Alex" }));
+        Assert.ThrowsExactly<FileNotFoundException>(() => _renderer.RenderToFile(from, to, new { Name = "Alex" }));
     }
 
     [TestCleanup]

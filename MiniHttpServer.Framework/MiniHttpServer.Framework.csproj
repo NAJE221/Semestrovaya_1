@@ -8,26 +8,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="static\DefaultErrorsPages\404.html">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="static\DefaultErrorsPages\500.html">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="static\DefaultErrorsPages\styles.css">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="static\DefaultErrorsPages\404.html">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="static\DefaultErrorsPages\500.html">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="static\DefaultErrorsPages\styles.css">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 
     <ItemGroup>
-        <EmbeddedResource Include="static/DefaultErrorsPages/*.html" />
+        <EmbeddedResource Include="static/DefaultErrorsPages/*.html"/>
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="static\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MiniHttpServer.HtmlTemplating\MiniHttpServer.HtmlTemplating.csproj"/>
     </ItemGroup>
 
 </Project>

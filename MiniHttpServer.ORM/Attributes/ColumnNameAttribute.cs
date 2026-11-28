@@ -2,6 +2,6 @@
 
 public class ColumnNameAttribute(string columnName) : Attribute
 {
-    public readonly string ColumnName = columnName 
-                    ?? throw new ArgumentNullException(nameof(columnName));
+    public readonly string ColumnName = columnName
+                                        ?? throw new ArgumentNullException(nameof(columnName));
 }

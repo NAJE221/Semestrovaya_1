@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using MiniHttpServer.Framework.Framework;
+﻿using MiniHttpServer.Framework.Framework;
 
 namespace MiniHttpServer.Terminal;
 
@@ -19,7 +18,7 @@ public static class TerminalCommand
                     TerminalUi.WriteColored("Сервер уже запущен", ConsoleColor.Red);
                     TerminalUi.WriteColored("Введите команду: ", ConsoleColor.Green);
                 }
-                
+
                 else
                 {
                     server.Start();
@@ -30,9 +29,11 @@ public static class TerminalCommand
 
             case "2" or "stop":
                 if (!server.Listening)
+                {
                     TerminalUi.WriteColored("Сервер уже остановлен\n", ConsoleColor.Red);
-                
-                
+                }
+
+
                 else
                 {
                     await server.StopAsync();

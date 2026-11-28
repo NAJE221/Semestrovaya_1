@@ -16,17 +16,14 @@ using MiniHttpServer.HtmlTemplating.Parsing;
 namespace MiniHttpServer.HtmlTemplating;
 
 /// <summary>
-/// Реализация HTML-шаблонизатора: выполняет лексический анализ,
-/// синтаксический разбор и рендеринг шаблона в готовую разметку.
+///     Реализация HTML-шаблонизатора: выполняет лексический анализ,
+///     синтаксический разбор и рендеринг шаблона в готовую разметку.
 /// </summary>
-
 public class HtmlTemplateRenderer : IHtmlTemplateRenderer
 {
-    private readonly ILexer _lexer = new Lexer();
-
     /// <summary>
-    /// Массив числовых типов, используемых для проверки,
-    /// являются ли операнды числовыми перед сравнением.
+    ///     Массив числовых типов, используемых для проверки,
+    ///     являются ли операнды числовыми перед сравнением.
     /// </summary>
     private static readonly Type[] NumericTypes =
     [
@@ -41,6 +38,8 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
         // Десятичный тип
         typeof(decimal)
     ];
+
+    private readonly ILexer _lexer = new Lexer();
 
     /// <inheritdoc />
     public string RenderFromString<T>(string htmlTemplate, T dataModel)
@@ -103,7 +102,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Рендерит список узлов AST в строку.
+    ///     Рендерит список узлов AST в строку.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="listNodes">Список узлов для рендеринга.</param>
@@ -117,7 +116,6 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
 
         // Обходим все узлы в списке
         foreach (var res in listNodes)
-        {
             // Диспетчеризация по типу узла
             switch (res)
             {
@@ -145,14 +143,13 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
                     resultBuilder.Append(resForeach);
                     break;
             }
-        }
 
         // Возвращаем накопленную строку без крайних пробелов
         return resultBuilder.ToString().Trim();
     }
 
     /// <summary>
-    /// Рендерит узел условия <c>$if</c>.
+    ///     Рендерит узел условия <c>$if</c>.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="ifNode">Узел условия.</param>
@@ -209,7 +206,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Рендерит узел цикла <c>$foreach</c>.
+    ///     Рендерит узел цикла <c>$foreach</c>.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="foreachNode">Узел цикла.</param>
@@ -247,7 +244,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Проверяет булево выражение сравнения двух операндов.
+    ///     Проверяет булево выражение сравнения двух операндов.
     /// </summary>
     /// <param name="leftOperand">Левый операнд.</param>
     /// <param name="operation">Операция сравнения.</param>
@@ -303,14 +300,14 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Возвращает значение операнда (литерала или пути к свойству).
+    ///     Возвращает значение операнда (литерала или пути к свойству).
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="operand">Операнд.</param>
     /// <param name="dataModel">Объект модели данных.</param>
     /// <param name="scope">Словарь переменных цикла.</param>
     /// <returns>Значение операнда или null.</returns>
-    /// <exception cref="ArgumentNullException">Если <paramref name="dataModel"/> равен null.</exception>
+    /// <exception cref="ArgumentNullException">Если <paramref name="dataModel" /> равен null.</exception>
     /// <exception cref="ArgumentException">Если тип операнда не поддерживается.</exception>
     private object? GetOperandValue<T>(Operand? operand, T? dataModel, Dictionary<string, object> scope)
     {
@@ -335,7 +332,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Обрабатывает операнд-путь: проходит по сегментам и извлекает значение.
+    ///     Обрабатывает операнд-путь: проходит по сегментам и извлекает значение.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="pathOperand">Операнд-путь.</param>
@@ -410,7 +407,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Извлекает значение из литерального операнда.
+    ///     Извлекает значение из литерального операнда.
     /// </summary>
     /// <param name="literalOperand">Литеральный операнд.</param>
     /// <returns>Значение литерала.</returns>
@@ -423,7 +420,7 @@ public class HtmlTemplateRenderer : IHtmlTemplateRenderer
     }
 
     /// <summary>
-    /// Проверяет существование файла по указанному пути.
+    ///     Проверяет существование файла по указанному пути.
     /// </summary>
     /// <param name="filePath">Путь к файлу.</param>
     /// <exception cref="FileNotFoundException">Если файл не найден.</exception>

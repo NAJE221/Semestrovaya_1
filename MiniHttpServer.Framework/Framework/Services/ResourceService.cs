@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using MiniHttpServer.Framework.Framework.Abstractions;
 using MiniHttpServer.Framework.Framework.Enums;
-using static MiniHttpServer.Framework.Framework.Services.FileService;
+using static MiniHttpServer.Framework.Framework.Services.HttpResponseService;
 
 namespace MiniHttpServer.Framework.Framework.Services;
 
-public class ResourceService(string errorPagesDirectory = "DefaultErrorsPages") 
+public class ResourceService(string errorPagesDirectory = "DefaultErrorsPages")
     : IResourceService
 {
     public async Task<bool> CheckNull(
@@ -53,15 +53,15 @@ public class ResourceService(string errorPagesDirectory = "DefaultErrorsPages")
                 $"Встроенная страница ошибки {codeError} не найдена!");
 
         await using var memoryStream = new MemoryStream();
-        
+
         await stream.CopyToAsync(memoryStream);
 
-        
+
         context.Response.StatusCode = codeError;
 
-        await FilePush(
+        await Push(
             memoryStream.ToArray(),
-            "text/html; charset=utf-8",
-            context);
+            context.Response,
+            "text/html; charset=utf-8");
     }
 }

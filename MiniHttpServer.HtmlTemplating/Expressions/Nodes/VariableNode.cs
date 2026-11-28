@@ -3,7 +3,7 @@
 namespace MiniHttpServer.HtmlTemplating.Expressions.Nodes;
 
 /// <summary>
-/// Узел подстановки переменной (${...}).
+///     Узел подстановки переменной (${...}).
 /// </summary>
 public class VariableNode(Operand value) : Node
 {

@@ -13,7 +13,7 @@ public static class ControllerFactory
         var constructor = controllerType
             .GetConstructors()
             .Single();
-        
+
 
         var parameters = constructor.GetParameters();
         var arguments = new object[parameters.Length];
@@ -22,7 +22,7 @@ public static class ControllerFactory
         {
             var type = parameters[i].ParameterType;
 
-            
+
             if (type == typeof(HttpListenerContext))
             {
                 arguments[i] = context;
@@ -40,7 +40,7 @@ public static class ControllerFactory
                 arguments[i] = context.Response;
                 continue;
             }
-            
+
             arguments[i] = services.Get(type)
                            ?? throw new InvalidOperationException(
                                $"Сервис {type.Name} не зарегистрирован " +

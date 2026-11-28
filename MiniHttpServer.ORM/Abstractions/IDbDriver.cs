@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using Microsoft.Data.SqlClient;
 
 namespace MiniHttpServer.ORM.Abstractions;
 

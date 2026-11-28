@@ -1,14 +1,10 @@
-import { loadCards } from "./cards-api.js";
+import {loadCards} from "./cards-api.js";
 
-// Значения по умолчанию. Остальные категории по умолчанию = "any" (ключа в state нет).
-const DEFAULTS = { set: "standard", sort: "mana-asc", view: "cards", group_by_class: "true" };
-// Эти категории не показываем плашками над результатами.
+const DEFAULTS = {set: "standard", sort: "mana-asc", view: "cards", group_by_class: "true"};
 const HIDDEN_TAGS = new Set(["sort", "view", "group_by_class"]);
 
-// ЕДИНСТВЕННЫЙ источник правды: по одному значению на категорию.
-// Выбор нового значения просто перезаписывает старое, а внешний вид и запрос строятся из state.
-const state = { ...DEFAULTS };
-const costs = new Set(); // мана — множественный выбор
+const state = {...DEFAULTS};
+const costs = new Set();
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -21,17 +17,15 @@ export function initCardsFilters() {
     const groupCheckbox = $(".sort-group__checkbox");
     const tags = $("#selected-filters");
 
-    // запоминаем исходный заголовок каждой кнопки-шторки ("Все классы", "Атака"...)
     $$(".filter-list__container").forEach(container => {
         const trigger = container.previousElementSibling;
         const text = trigger && $(".filter-button__text", trigger);
         if (text) trigger.dataset.heading = text.textContent.trim();
     });
 
-    // ---------- состояние -> внешний вид ----------
     function syncButtons() {
         $$("button[data-filter][data-value]").forEach(button => {
-            const { filter, value } = button.dataset;
+            const {filter, value} = button.dataset;
             const active = filter === "cost" ? costs.has(value) : (state[filter] ?? "any") === value;
             button.classList.toggle("is-active", active);
         });
@@ -97,7 +91,6 @@ export function initCardsFilters() {
         tags?.replaceChildren(...items);
     }
 
-    // ---------- действия ----------
     const sortedCosts = () => [...costs].sort((a, b) => parseInt(a) - parseInt(b));
 
     function resetFilter(filter) {
@@ -116,7 +109,7 @@ export function initCardsFilters() {
     }
 
     function buildPayload() {
-        const payload = { ...state };
+        const payload = {...state};
         if (costs.size) payload.cost = sortedCosts().join(",");
         const q = searchInput?.value.trim();
         if (q) payload.q = q;
@@ -130,9 +123,6 @@ export function initCardsFilters() {
         loadCards(buildPayload());
     }
 
-    // ---------- события ----------
-    // Если CSS прячет шторку при потере фокуса кнопкой-триггером, она исчезала бы
-    // на mousedown, ещё до click. Не даём фокусу уйти с триггера.
     document.addEventListener("mousedown", event => {
         if (event.target.closest(".filter-list__container")) event.preventDefault();
     });
@@ -141,17 +131,16 @@ export function initCardsFilters() {
         const button = event.target.closest("button[data-filter][data-value]");
         if (!button) return;
 
-        const { filter, value } = button.dataset;
+        const {filter, value} = button.dataset;
 
         if (filter === "cost") {
-            if (!costs.delete(value)) costs.add(value);          // вкл/выкл
+            if (!costs.delete(value)) costs.add(value);
         } else if (value === "any") {
-            delete state[filter];                                  // "Все ..." = фильтр снят
+            delete state[filter];
         } else {
-            state[filter] = value;                                 // новое значение ЗАМЕНЯЕТ прежнее
+            state[filter] = value;
         }
 
-        // закрываем шторку, из которой выбрали
         const trigger = button.closest(".filter-list__container")?.previousElementSibling;
         trigger?.classList.remove("is-open");
         trigger?.blur();
@@ -169,7 +158,7 @@ export function initCardsFilters() {
         event.preventDefault();
         update();
     });
-    searchInput?.addEventListener("search", update); // крестик очистки в input[type=search]
+    searchInput?.addEventListener("search", update);
 
     if (groupCheckbox) state.group_by_class = String(groupCheckbox.checked);
     update();

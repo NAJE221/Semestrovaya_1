@@ -3,7 +3,7 @@
 namespace MiniHttpServer.HtmlTemplating.Expressions.Conditions;
 
 /// <summary>
-/// Модель условия для конструкции $if.
+///     Модель условия для конструкции $if.
 /// </summary>
 public class Condition(Operand left, string? operation, Operand? right)
 {

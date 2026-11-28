@@ -8,21 +8,21 @@ public static class TerminalUi
     public static void PrintMenu()
     {
         Console.Clear();
-        
+
         WriteColored(""" 
-                           ╔══════════════════════════════════════╗
-                           ║                                      ║
-                           ║          MINI HTTP SERVER            ║
-                           ║                                      ║
-                           ╠══════════════════════════════════════╣
-                           ║                                      ║
-                           ║   [1]  START   - Запустить сервер    ║
-                           ║   [2]  STOP    - Остановить сервер   ║
-                           ║   [3]  EXIT    - Выход               ║
-                           ║                                      ║
-                           ╚══════════════════════════════════════╝
-                          """, ConsoleColor.Yellow);
-        
+                      ╔══════════════════════════════════════╗
+                      ║                                      ║
+                      ║          MINI HTTP SERVER            ║
+                      ║                                      ║
+                      ╠══════════════════════════════════════╣
+                      ║                                      ║
+                      ║   [1]  START   - Запустить сервер    ║
+                      ║   [2]  STOP    - Остановить сервер   ║
+                      ║   [3]  EXIT    - Выход               ║
+                      ║                                      ║
+                      ╚══════════════════════════════════════╝
+                     """, ConsoleColor.Yellow);
+
         WriteColored("\nВведите команду: ", ConsoleColor.Green);
     }
 
@@ -39,14 +39,14 @@ public static class TerminalUi
         }
     }
 
-    public static void PrintSuccessfulStart(HttpListenerPrefixCollection prefixes , ServerSettings serverSettings)
+    public static void PrintSuccessfulStart(HttpListenerPrefixCollection prefixes, ServerSettings serverSettings)
     {
         Console.Clear();
         WriteColored("Сервер запущен\n", ConsoleColor.Green);
-        PrintPrefixes(prefixes , serverSettings);
+        PrintPrefixes(prefixes, serverSettings);
         WriteColored("Введите команду: ", ConsoleColor.Green);
     }
-    
+
     public static void WriteColored(string text, ConsoleColor color)
     {
         Console.ForegroundColor = color;

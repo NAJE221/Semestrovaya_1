@@ -14,9 +14,9 @@
     <ItemGroup>
         <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\..\MiniHttpServer.HtmlTemplating\MiniHttpServer.HtmlTemplating.csproj" />
+        <ProjectReference Include="..\..\MiniHttpServer.HtmlTemplating\MiniHttpServer.HtmlTemplating.csproj"/>
     </ItemGroup>
 
 </Project>

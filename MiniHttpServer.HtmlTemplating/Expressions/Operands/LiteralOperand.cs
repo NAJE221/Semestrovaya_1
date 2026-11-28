@@ -3,7 +3,7 @@
 namespace MiniHttpServer.HtmlTemplating.Expressions.Operands;
 
 /// <summary>
-/// Операнд-литерал (константа: число, строка, true/false).
+///     Операнд-литерал (константа: число, строка, true/false).
 /// </summary>
 public class LiteralOperand(object value) : Operand
 {

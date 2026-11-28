@@ -13,10 +13,10 @@ public class NpgsqlDbDriver : IDbDriver
     {
         if (string.IsNullOrEmpty(connectionString))
             throw new ArgumentException($"Строка подключения: {connectionString} оказалась битой.");
-        
+
         _connectionString = connectionString;
     }
-    
+
     public DbConnection CreateConnection()
     {
         return new NpgsqlConnection(_connectionString);
@@ -33,7 +33,7 @@ public class NpgsqlDbDriver : IDbDriver
 
     public DbParameter CreateParameter(string parameterName, object? parameterValue)
     {
-        return new NpgsqlParameter(parameterName, parameterValue ?? DBNull.Value) ;
+        return new NpgsqlParameter(parameterName, parameterValue ?? DBNull.Value);
     }
 
     public ISqlBuilder CreateSqlBuilder()
@@ -41,4 +41,3 @@ public class NpgsqlDbDriver : IDbDriver
         return new NpgSqlBuilder();
     }
 }
-

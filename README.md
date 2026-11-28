@@ -1,34 +1,27 @@
-# Hearthstone Cards
+# MiniHttpServer: запуск в Docker
 
-Сайт-каталог карт Hearthstone на C# (.NET 10) и PostgreSQL.
+## Что нужно
+Windows и установленный **Docker Desktop** (он должен быть запущен). .NET и PostgreSQL устанавливать не нужно.
 
 ## Запуск
+Откройте PowerShell в корне проекта (там, где `MiniHttpServer.sln`) и выполните:
 
-Нужен только Docker. В папке с `docker-compose.yml` выполните:
-
-```bash
-docker compose up --build
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start.ps1
 ```
 
-Сайт: http://localhost:8080/hearthstone
-
-При первом запуске база создаётся сама из `db/hearthstone_full.sql`.
+Скрипт создаст Docker-файлы, поднимет базу, выполнит SQL-скрипты из `db` и запустит сервер.
+Сайт: http://localhost:8080/hearthstone/ (адрес также выводится в консоли зелёной строкой). Первый запуск занимает несколько минут.
 
 ## Остановка
+Нажмите `Ctrl+C`. Чтобы удалить контейнеры и данные:
 
-```bash
-docker compose down
-```
-
-Удалить базу (SQL выполнится заново при следующем запуске):
-
-```bash
+```powershell
 docker compose down -v
 ```
 
-## Настройки
+## Если не запускается
+- `Docker is not running`: запустите Docker Desktop.
+- `port is already allocated`: закройте программу, занимающую порт (например, сервер, запущенный в Rider).
 
-В Docker настройки берутся из `server.docker.json`. Имя базы, пользователь и пароль там должны совпадать с `docker-compose.yml`.
-
-Без Docker используется `server.json`.
-
+Каждый запуск через `start.ps1` создаёт базу заново.

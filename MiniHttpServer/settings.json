@@ -1,17 +1,14 @@
-﻿{   
-  "ServerSettings":
-    {
-      "Host": "127.0.0.1",
-      "Port": 8080,
-      "Path": "hearthstone"
-    },
-  
-    "DatabaseServerSettings": 
-    {
-      "Host": "localhost",
-      "Port": 5432,
-      "Username": "postgres",
-      "Password": "18041804",
-      "DataBase": "hard"
-    }
+﻿{
+  "ServerSettings": {
+    "Host": "127.0.0.1",
+    "Port": 8080,
+    "Path": "hearthstone"
+  },
+  "DatabaseServerSettings": {
+    "Host": "localhost",
+    "Port": 5432,
+    "Username": "postgres",
+    "Password": "18041804",
+    "DataBase": "hard"
+  }
 }

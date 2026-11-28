@@ -4,7 +4,7 @@ using MiniHttpServer.HtmlTemplating.Expressions.Operands;
 namespace MiniHttpServer.HtmlTemplating.Expressions.Nodes;
 
 /// <summary>
-/// Узел цикла $foreach.
+///     Узел цикла $foreach.
 /// </summary>
 public class ForeachNode(string itemName, PathOperand collection, List<Node> body) : Node
 {

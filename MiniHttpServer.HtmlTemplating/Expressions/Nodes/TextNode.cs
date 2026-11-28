@@ -3,7 +3,7 @@
 namespace MiniHttpServer.HtmlTemplating.Expressions.Nodes;
 
 /// <summary>
-/// Узел статического текста шаблона.
+///     Узел статического текста шаблона.
 /// </summary>
 public class TextNode(string text) : Node
 {

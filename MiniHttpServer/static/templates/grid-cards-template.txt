@@ -1,5 +1,4 @@
-﻿
-<div class="card-grid__container ${model.ContainerClass}">
+﻿<div class="card-grid__container">
     <div class="ornament">
         <ul class="ornament__elements">
             <li class="titleLeftStart decoration"></li>
@@ -31,7 +30,7 @@
             <a class="card-link" href="#" data-card-slug="${card.Slug}">
                 <div class="card">
                     <img
-                        src="${card.ImageUrl}"
+                        src="${card.Image}"
                         alt="${card.Name}"
                     >
                 </div>

@@ -84,7 +84,7 @@ public class RenderFromStringTests
     public void RenderFromString_EmptyTemplate_ReturnsEmptyString()
     {
         // Arrange
-        string template = "";
+        var template = "";
         var model = new { Name = "Car" };
 
         // Act

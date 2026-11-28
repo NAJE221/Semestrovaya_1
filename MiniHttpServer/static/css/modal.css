@@ -4,7 +4,9 @@
     --modal-font: "Benguiat Bold", Georgia, "Times New Roman", serif;
 }
 
-body.modal-open { overflow: hidden; }
+body.modal-open {
+    overflow: hidden;
+}
 
 @font-face {
     font-family: 'Benguiat';
@@ -26,7 +28,10 @@ body.modal-open { overflow: hidden; }
     overflow-y: auto;
     color: #fff;
 }
-.modal[hidden] { display: none; }
+
+.modal[hidden] {
+    display: none;
+}
 
 .modal__dialog {
     position: relative;
@@ -39,7 +44,10 @@ body.modal-open { overflow: hidden; }
     margin: auto;
 }
 
-.modal__card { flex: 0 0 375px; }
+.modal__card {
+    flex: 0 0 375px;
+}
+
 .modal__card img {
     display: block;
     width: 100%;
@@ -47,7 +55,10 @@ body.modal-open { overflow: hidden; }
     filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .6));
 }
 
-.modal__info { flex: 0 1 460px; min-width: 0; }
+.modal__info {
+    flex: 0 1 460px;
+    min-width: 0;
+}
 
 .modal__title {
     margin: 0;
@@ -56,18 +67,23 @@ body.modal-open { overflow: hidden; }
     line-height: 1.1;
     color: #fff;
 }
+
 .modal__flavor {
     margin: 5px 0;
     font-size: 18px;
     font-style: italic;
     opacity: .5;
 }
+
 .modal__text {
     margin: 5px 0 0;
     font-size: 18px;
     line-height: 1.45;
 }
-.modal__text b, .modal__text strong { font-weight: 700; }
+
+.modal__text b, .modal__text strong {
+    font-weight: 700;
+}
 
 .modal__facts {
     margin: 20px 0 0;
@@ -75,12 +91,16 @@ body.modal-open { overflow: hidden; }
     font-size: 14px;
     line-height: 1.75;
 }
+
 .modal__facts li {
     list-style: disc;
     margin-left: 20px;
     color: #fff;
 }
-.modal__facts b { color: var(--modal-label); }
+
+.modal__facts b {
+    color: var(--modal-label);
+}
 
 
 .modal__close {
@@ -109,7 +129,10 @@ body.modal-open { overflow: hidden; }
 }
 
 
-.modal__arrow:hover { filter: brightness(1.2); }
+.modal__arrow:hover {
+    filter: brightness(1.2);
+}
+
 .modal__arrow--prev {
     left: -40px;
     clip-path: polygon(100% 0, 0 50%, 100% 100%);
@@ -132,18 +155,49 @@ body.modal-open { overflow: hidden; }
     background-size: contain;
 }
 
-.modal__arrow--prev:hover { transform: translateY(-50%) translateX(-4px); }
-.modal__arrow--next:hover { transform: translateY(-50%) translateX(4px); }
+.modal__arrow--prev:hover {
+    transform: translateY(-50%) translateX(-4px);
+}
+
+.modal__arrow--next:hover {
+    transform: translateY(-50%) translateX(4px);
+}
 
 .modal__close:focus-visible,
-.modal__arrow:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.modal__arrow:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+}
 
 @media (max-width: 960px) {
-    .modal__dialog { flex-direction: column; padding-top: 60px; }
-    .modal__card { flex-basis: auto; width: min(80%, 375px); }
-    .modal__arrow { top: 190px; }
-    .modal__arrow--prev { left: 8px; }
-    .modal__arrow--next { right: 8px; }
-    .modal__title { font-size: 28px; }
-    .modal__close { top: 12px; right: 18px; }
+    .modal__dialog {
+        flex-direction: column;
+        padding-top: 60px;
+    }
+
+    .modal__card {
+        flex-basis: auto;
+        width: min(80%, 375px);
+    }
+
+    .modal__arrow {
+        top: 190px;
+    }
+
+    .modal__arrow--prev {
+        left: 8px;
+    }
+
+    .modal__arrow--next {
+        right: 8px;
+    }
+
+    .modal__title {
+        font-size: 28px;
+    }
+
+    .modal__close {
+        top: 12px;
+        right: 18px;
+    }
 }

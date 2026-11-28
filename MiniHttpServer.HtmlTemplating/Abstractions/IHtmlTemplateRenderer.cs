@@ -1,18 +1,18 @@
 ﻿namespace MiniHttpServer.HtmlTemplating.Abstractions;
 
 /// <summary>
-/// Определяет контракт HTML-шаблонизатора для формирования HTML-разметки
-/// на основе шаблона и переданной модели данных.
+///     Определяет контракт HTML-шаблонизатора для формирования HTML-разметки
+///     на основе шаблона и переданной модели данных.
 /// </summary>
 /// <remarks>
-/// Поддерживает подстановку значений свойств модели (${Property}),
-/// условные конструкции ($if, $else, $endif)
-/// и циклы ($foreach, $endfor).
+///     Поддерживает подстановку значений свойств модели (${Property}),
+///     условные конструкции ($if, $else, $endif)
+///     и циклы ($foreach, $endfor).
 /// </remarks>
 public interface IHtmlTemplateRenderer
 {
     /// <summary>
-    /// Выполняет обработку HTML-шаблона, переданного в виде строки.
+    ///     Выполняет обработку HTML-шаблона, переданного в виде строки.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="htmlTemplate">Строка с HTML-шаблоном.</param>
@@ -21,7 +21,7 @@ public interface IHtmlTemplateRenderer
     string RenderFromString<T>(string htmlTemplate, T dataModel);
 
     /// <summary>
-    /// Выполняет обработку HTML-шаблона, загруженного из файла.
+    ///     Выполняет обработку HTML-шаблона, загруженного из файла.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="filePath">Путь к файлу шаблона.</param>
@@ -30,7 +30,7 @@ public interface IHtmlTemplateRenderer
     string RenderFromFile<T>(string filePath, T dataModel);
 
     /// <summary>
-    /// Выполняет обработку HTML-шаблона из файла и сохраняет результат в указанный файл.
+    ///     Выполняет обработку HTML-шаблона из файла и сохраняет результат в указанный файл.
     /// </summary>
     /// <typeparam name="T">Тип модели данных.</typeparam>
     /// <param name="inputFilePath">Путь к файлу шаблона.</param>

@@ -15,23 +15,23 @@ using MiniHttpServer.HtmlTemplating.Token;
 namespace MiniHttpServer.HtmlTemplating.Parsing;
 
 /// <summary>
-/// Синтаксический анализатор: преобразует последовательность токенов
-/// в дерево узлов (AST).
+///     Синтаксический анализатор: преобразует последовательность токенов
+///     в дерево узлов (AST).
 /// </summary>
 public class Parser : IParser
 {
     /// <summary>
-    /// Текущая позиция в списке токенов.
+    ///     Текущая позиция в списке токенов.
     /// </summary>
     private int _pos;
 
     /// <summary>
-    /// Список токенов, полученных от лексера.
+    ///     Список токенов, полученных от лексера.
     /// </summary>
-    private List<TokenModel>? _tokens = null;
+    private List<TokenModel>? _tokens;
 
     /// <summary>
-    /// Текущий токен (или null, если достигнут конец).
+    ///     Текущий токен (или null, если достигнут конец).
     /// </summary>
     private TokenModel? Current => _pos < _tokens?.Count ? _tokens[_pos] : null;
 
@@ -48,14 +48,13 @@ public class Parser : IParser
 
         // Если остались необработанные токены - это ошибка
         return Current != null
-            ?
-            throw new Exception($"Неожиданная конструкция '{Current.Value}': нет соответствующего открывающего $if или $foreach")
-            :
-            nodes;
+            ? throw new Exception(
+                $"Неожиданная конструкция '{Current.Value}': нет соответствующего открывающего $if или $foreach")
+            : nodes;
     }
 
     /// <summary>
-    /// Разбирает блок узлов до закрывающего тега.
+    ///     Разбирает блок узлов до закрывающего тега.
     /// </summary>
     /// <returns>Список узлов блока.</returns>
     /// <exception cref="Exception">При неожиданном токене.</exception>
@@ -66,7 +65,6 @@ public class Parser : IParser
 
         // Идём по токенам, пока не достигнем конца
         while (Current != null)
-        {
             // Диспетчеризация по типу токена
             switch (Current.Type)
             {
@@ -103,16 +101,15 @@ public class Parser : IParser
                 default:
                     throw new Exception($"Неожиданный токен {Current.Type} ('{Current.Value}')");
             }
-        }
 
         // Возвращаем накопленные узлы
         return nodes;
     }
 
     /// <summary>
-    /// Разбирает конструкцию <c>$if</c>.
+    ///     Разбирает конструкцию <c>$if</c>.
     /// </summary>
-    /// <returns>Узел <see cref="IfNode"/>.</returns>
+    /// <returns>Узел <see cref="IfNode" />.</returns>
     /// <exception cref="Exception">При некорректном синтаксисе условия.</exception>
     private IfNode ParseIf()
     {
@@ -167,9 +164,9 @@ public class Parser : IParser
     }
 
     /// <summary>
-    /// Разбирает конструкцию <c>$foreach</c>.
+    ///     Разбирает конструкцию <c>$foreach</c>.
     /// </summary>
-    /// <returns>Узел <see cref="ForeachNode"/>.</returns>
+    /// <returns>Узел <see cref="ForeachNode" />.</returns>
     /// <exception cref="Exception">При некорректном синтаксисе цикла.</exception>
     private ForeachNode ParseForeach()
     {
@@ -207,10 +204,10 @@ public class Parser : IParser
     }
 
     /// <summary>
-    /// Определяет, что перед нами: константа или путь к свойству.
+    ///     Определяет, что перед нами: константа или путь к свойству.
     /// </summary>
     /// <param name="text">Текст операнда.</param>
-    /// <returns>Операнд (<see cref="LiteralOperand"/> или <see cref="PathOperand"/>).</returns>
+    /// <returns>Операнд (<see cref="LiteralOperand" /> или <see cref="PathOperand" />).</returns>
     /// <exception cref="Exception">Если выражение некорректно.</exception>
     private static Operand ParseOperand(string text)
     {
@@ -239,17 +236,15 @@ public class Parser : IParser
 
         // Проверяем каждый сегмент на корректность
         foreach (var segment in segments)
-        {
             if (!IsValidIdentifier(segment))
                 throw new Exception($"Некорректное выражение '{text}'");
-        }
 
         // Возвращаем операнд-путь
         return new PathOperand(segments);
     }
 
     /// <summary>
-    /// Проверяет, является ли строка корректным идентификатором.
+    ///     Проверяет, является ли строка корректным идентификатором.
     /// </summary>
     /// <param name="s">Проверяемая строка.</param>
     /// <returns>true, если идентификатор корректен.</returns>
@@ -264,7 +259,7 @@ public class Parser : IParser
     }
 
     /// <summary>
-    /// Проверяет тип текущего токена, возвращает его и сдвигает позицию вперёд.
+    ///     Проверяет тип текущего токена, возвращает его и сдвигает позицию вперёд.
     /// </summary>
     /// <param name="type">Ожидаемый тип токена.</param>
     /// <returns>Текущий токен.</returns>

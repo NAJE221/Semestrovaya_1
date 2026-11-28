@@ -2,34 +2,43 @@
 
     <button class="modal__close" type="button" data-modal-close aria-label="Закрыть">&times;</button>
 
-    $if(model.PrevSlug != "")
+    $if(model.HasPrev)
     <button class="modal__arrow modal__arrow--prev" type="button"
             data-card-slug="${model.PrevSlug}" aria-label="Предыдущая карта"></button>
     $endif
 
     <div class="modal__card">
-        <img src="${model.Card.ImageUrl}" alt="${model.Card.Name}">
+        <img src="${model.Card.Image}" alt="${model.Card.Name}">
     </div>
 
     <div class="modal__info">
         <h3 class="modal__title">${model.Card.Name}</h3>
         <p class="modal__flavor">${model.Card.FlavorText}</p>
-        <p class="modal__text">${model.Card.Description}</p>
+        <p class="modal__text">${model.Card.Text}</p>
 
         <ul class="modal__facts">
-            <li><b>Тип:</b> ${model.CardTypeName}</li>
+            <li><b>Тип:</b> ${model.TypeName}</li>
             <li><b>Редкость:</b> ${model.RarityName}</li>
-            <li><b>Набор:</b> ${model.CardSetName}</li>
-            <li><b>Класс:</b> ${model.Class.Name}</li>
-            <li><b>Стоимость:</b> ${model.Card.ManaCost}</li>
+            <li><b>Набор:</b> ${model.SetName}</li>
+            <li><b>Класс:</b> ${model.ClassName}</li>
+            $if(model.HasCraft)
+            <li><b>Стоимость изготовления:</b> ${model.Craft}</li>
+            $endif
+            $if(model.HasDust)
+            <li><b>Кол-во пыли при распылении:</b> ${model.Dust}</li>
+            $endif
+            $if(model.HasArtist)
             <li><b>Художник:</b> ${model.Card.ArtistName}</li>
-            $if(model.Card.IsCollectible)
+            $endif
+            $if(model.Card.Collectible)
             <li><b>Коллекционная</b></li>
             $endif
         </ul>
+
+   
     </div>
 
-    $if(model.NextSlug != "")
+    $if(model.HasNext)
     <button class="modal__arrow modal__arrow--next" type="button"
             data-card-slug="${model.NextSlug}" aria-label="Следующая карта"></button>
     $endif

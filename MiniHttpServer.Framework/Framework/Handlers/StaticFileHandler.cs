@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using MiniHttpServer.Framework.Framework.Abstractions;
-using static MiniHttpServer.Framework.Framework.Services.FileService;
+using static MiniHttpServer.Framework.Framework.Services.HttpResponseService;
 
 
 namespace MiniHttpServer.Framework.Framework.Handlers;
@@ -11,28 +11,30 @@ internal class StaticFileHandler(IResourceService resourceService) : Handler
     {
         var request = context.Request;
         Console.WriteLine($"\nЗапрос пришел : {request.Url?.LocalPath}");
-        
+
         var userPath = request.Url?.LocalPath.Trim('/') ?? string.Empty;
-        
-        var isFile   = !string.IsNullOrEmpty(userPath) && Path.HasExtension(userPath);
-        
+
+        var isFile = !string.IsNullOrEmpty(userPath) && Path.HasExtension(userPath);
+
         if (isFile)
         {
             var staticRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "static"));
-            var filePath         = Path.GetFullPath(Path.Combine(staticRoot, userPath));
-            
+            var filePath = Path.GetFullPath(Path.Combine(staticRoot, userPath));
+
             Console.WriteLine(filePath);
-            
+
             if (!await resourceService.ResolveFile(filePath, context))
                 return;
-            
+
             await FilePush(filePath, context);
-            
+
             Console.WriteLine("Запрос обработан");
             context.Response.Close();
         }
 
         else if (Successor != null)
+        {
             await Successor.HandlerRequest(context);
-    }   
+        }
+    }
 }

@@ -1,12 +1,10 @@
-﻿using System.Net;
-
-namespace MiniHttpServer.Framework.Framework.Content;
+﻿namespace MiniHttpServer.Framework.Framework.Content;
 
 public static class MimeTypeChecker
 {
-    public static void CheckMimeType(HttpListenerResponse response, FileInfo fileInfo)
+    public static string CheckMimeType(FileInfo fileInfo)
     {
-        response.ContentType = fileInfo.Extension.ToLower() switch
+        return fileInfo.Extension.ToLower() switch
         {
             ".html" or ".htm" => "text/html; charset=utf-8",
             ".css" => "text/css; charset=utf-8",
@@ -14,7 +12,7 @@ public static class MimeTypeChecker
             ".json" => "application/json; charset=utf-8",
             ".xml" => "application/xml; charset=utf-8",
             ".txt" => "text/plain; charset=utf-8",
-        
+
             ".png" => "image/png",
             ".jpg" or ".jpeg" => "image/jpeg",
             ".gif" => "image/gif",
@@ -22,24 +20,24 @@ public static class MimeTypeChecker
             ".ico" => "image/x-icon",
             ".webp" => "image/webp",
             ".bmp" => "image/bmp",
-        
+
             ".woff" => "font/woff",
             ".woff2" => "font/woff2",
             ".ttf" => "font/ttf",
             ".eot" => "application/vnd.ms-fontobject",
-        
+
             ".mp4" => "video/mp4",
             ".webm" => "video/webm",
             ".avi" => "video/x-msvideo",
-        
+
             ".mp3" => "audio/mpeg",
             ".wav" => "audio/wav",
             ".ogg" => "audio/ogg",
-        
+
             ".pdf" => "application/pdf",
             ".zip" => "application/zip",
             ".gz" => "application/gzip",
-        
+
             _ => "application/octet-stream"
         };
     }

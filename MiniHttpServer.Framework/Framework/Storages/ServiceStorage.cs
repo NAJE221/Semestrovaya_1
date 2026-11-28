@@ -10,5 +10,7 @@ public class AppStorage
     }
 
     public object? Get(Type type)
-        => _services.FirstOrDefault(type.IsInstanceOfType);
+    {
+        return _services.FirstOrDefault(type.IsInstanceOfType);
+    }
 }

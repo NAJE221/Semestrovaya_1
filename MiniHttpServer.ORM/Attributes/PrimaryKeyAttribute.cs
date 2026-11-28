@@ -1,4 +1,5 @@
 ﻿namespace MiniHttpServer.ORM.Attributes;
 
-public class PrimaryKeyAttribute : Attribute { }
-
+public class PrimaryKeyAttribute : Attribute
+{
+}

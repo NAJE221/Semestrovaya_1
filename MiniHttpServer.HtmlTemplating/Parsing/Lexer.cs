@@ -9,20 +9,20 @@ using MiniHttpServer.HtmlTemplating.Token;
 namespace MiniHttpServer.HtmlTemplating.Parsing;
 
 /// <summary>
-/// Лексический анализатор шаблонов: разбивает строку шаблона
-/// на последовательность токенов.
+///     Лексический анализатор шаблонов: разбивает строку шаблона
+///     на последовательность токенов.
 /// </summary>
 public class Lexer : ILexer
 {
     /// <summary>
-    /// Поддерживаемые операторы сравнения.
+    ///     Поддерживаемые операторы сравнения.
     /// </summary>
-    private static string[] _operators = ["==", "!=", ">=", "<=", ">", "<"];
+    private static readonly string[] _operators = ["==", "!=", ">=", "<=", ">", "<"];
 
     /// <summary>
-    /// Поддерживаемые ключевые слова конструкций.
+    ///     Поддерживаемые ключевые слова конструкций.
     /// </summary>
-    private static string[] _keywords = ["if", "else", "endif", "foreach", "endfor"];
+    private static readonly string[] _keywords = ["if", "else", "endif", "foreach", "endfor"];
 
     /// <inheritdoc />
     public List<TokenModel> Tokenize(string template)
@@ -102,7 +102,7 @@ public class Lexer : ILexer
     }
 
     /// <summary>
-    /// Обрабатывает переменную <c>${...}</c>.
+    ///     Обрабатывает переменную <c>${...}</c>.
     /// </summary>
     /// <param name="template">Строка шаблона.</param>
     /// <param name="dollar">Позиция символа '$'.</param>
@@ -133,7 +133,7 @@ public class Lexer : ILexer
     }
 
     /// <summary>
-    /// Обрабатывает конструкцию <c>$if(...)</c>.
+    ///     Обрабатывает конструкцию <c>$if(...)</c>.
     /// </summary>
     /// <param name="template">Строка шаблона.</param>
     /// <param name="dollar">Позиция символа '$'.</param>
@@ -210,7 +210,7 @@ public class Lexer : ILexer
     }
 
     /// <summary>
-    /// Обрабатывает конструкцию <c>$foreach(...)</c>.
+    ///     Обрабатывает конструкцию <c>$foreach(...)</c>.
     /// </summary>
     /// <param name="template">Строка шаблона.</param>
     /// <param name="dollar">Позиция символа '$'.</param>
@@ -258,7 +258,7 @@ public class Lexer : ILexer
     }
 
     /// <summary>
-    /// Определяет ключевое слово после символа '$'.
+    ///     Определяет ключевое слово после символа '$'.
     /// </summary>
     /// <param name="text">Строка шаблона.</param>
     /// <param name="dollarPosition">Позиция символа '$'.</param>

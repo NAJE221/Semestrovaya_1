@@ -16,33 +16,44 @@ public class FrameworkBuilder
     private FrameworkBuilder(ServerSettings serverSettings, AppStorage storage)
     {
         RouteRegistry.Register();
-        
+
         var listener = new HttpListener();
-        
+
         IResourceService resourceService = new ResourceService();
 
-        Handler controllerHandler = new ControllerHandler(resourceService , storage);
+        Handler controllerHandler = new ControllerHandler(resourceService, storage);
         Handler fileHandler = new StaticFileHandler(resourceService);
 
         var chain = HandlerChainFactory.AssembleChain(
             fileHandler,
             controllerHandler);
 
-        var prefix = UriFactory.CreateUri(serverSettings).Uri;
+        string prefix;
 
-       
-        listener.Prefixes.Add(prefix.ToString());
-            
-        Server = new HttpServer(listener , chain , serverSettings);
+        if (serverSettings.Host == "+")
+        {
+            var path = serverSettings.Path?.Trim('/');
+            prefix = string.IsNullOrEmpty(path)
+                ? $"http://+:{serverSettings.Port}/"
+                : $"http://+:{serverSettings.Port}/{path}/";
+        }
+        else
+        {
+            prefix = UriFactory.CreateUri(serverSettings).Uri.ToString();
+        }
+
+        listener.Prefixes.Add(prefix);
+
+        Server = new HttpServer(listener, chain, serverSettings);
     }
 
     public static async Task<FrameworkBuilder> CreateBuilder(
-        string filePath, 
-        string sectionName, 
+        string filePath,
+        string sectionName,
         AppStorage storage)
     {
         var settings = await JsonConfigurationLoader.LoadAsync<ServerSettings>(filePath, sectionName);
 
-        return new FrameworkBuilder(settings , storage);
+        return new FrameworkBuilder(settings, storage);
     }
 }

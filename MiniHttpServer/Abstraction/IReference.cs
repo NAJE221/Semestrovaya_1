@@ -1,4 +1,4 @@
-namespace MiniHttpServer.Entities;
+namespace MiniHttpServer.Abstraction;
 
 /// <summary>Справочник со slug, по которому его находят фильтры страницы.</summary>
 public interface IReference

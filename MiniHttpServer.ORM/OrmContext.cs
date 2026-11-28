@@ -1,9 +1,11 @@
 ﻿using System.Data.Common;
 using System.Globalization;
 using System.Reflection;
-using MiniHttpServer.ORM.Abstractions;
-using MiniHttpServer.ORM.Mappers;
 using System.Runtime.CompilerServices;
+using MiniHttpServer.ORM.Abstractions;
+using MiniHttpServer.ORM.Attributes;
+using MiniHttpServer.ORM.Enums;
+using MiniHttpServer.ORM.Mappers;
 
 namespace MiniHttpServer.ORM;
 
@@ -16,7 +18,7 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
     private readonly ISqlBuilder _sqlBuilder = dbDriver.CreateSqlBuilder()
                                                ?? throw new ArgumentNullException(nameof(_sqlBuilder),
                                                    "Не обнаружено билдера");
-    
+
     /// <inheritdoc />
     public async IAsyncEnumerable<T> GetAllStreamAsync<T>(
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -31,10 +33,7 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            yield return Mapper.MapToEntity<T>(reader);
-        }
+        while (await reader.ReadAsync(cancellationToken)) yield return Mapper.MapToEntity<T>(reader);
     }
 
     public async Task<List<T>> GetAllAsync<T>(
@@ -51,10 +50,7 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            result.Add(Mapper.MapToEntity<T>(reader));
-        }
+        while (await reader.ReadAsync(cancellationToken)) result.Add(Mapper.MapToEntity<T>(reader));
 
         return result;
     }
@@ -76,10 +72,7 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
 
         var parameters = Mapper.MapToParameters(entity, _dbDriver);
 
-        foreach (var parameter in parameters)
-        {
-            command.Parameters.Add(parameter);
-        }
+        foreach (var parameter in parameters) command.Parameters.Add(parameter);
 
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -103,10 +96,8 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
 
         var i = 0;
         foreach (var p in properties.Concat(pkProperties))
-        {
             command.Parameters.Add(
                 _dbDriver.CreateParameter($"@p{i++}", p.GetValue(entity)));
-        }
 
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -120,8 +111,8 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
 
         var tableName = ReflectionHelper.GetTableName<T>();
 
-        var connection = await CreateConnectionAsync(cancellationToken);
-        
+        await using var connection = await CreateConnectionAsync(cancellationToken);
+
         var query = _sqlBuilder.BuildDelete<T>(tableName);
         await using var command = _dbDriver.CreateCommand(query, connection);
 
@@ -157,11 +148,109 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
         return null;
     }
 
+    public async IAsyncEnumerable<T> GetAllByIntermediateTableAsync<T>(
+        Type intermediateEntityType,
+        PropertyInfo sourceProperty,
+        PropertyInfo targetProperty,
+        object value,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where T : class, new()
+    {
+        ArgumentNullException.ThrowIfNull(intermediateEntityType);
+        ArgumentNullException.ThrowIfNull(sourceProperty);
+        ArgumentNullException.ThrowIfNull(targetProperty);
+        ArgumentNullException.ThrowIfNull(value);
+
+        if (sourceProperty.DeclaringType != intermediateEntityType ||
+            targetProperty.DeclaringType != intermediateEntityType)
+            throw new ArgumentException(
+                "Свойства должны принадлежать промежуточной сущности.");
+
+        var tableName = ReflectionHelper.GetTableName<T>();
+        var intermediateTableName = ReflectionHelper.GetTableName(intermediateEntityType);
+
+        await using var connection =
+            await CreateConnectionAsync(cancellationToken);
+
+        var primaryKeyProperty = ReflectionHelper.GetPropertyPrimaryKey(typeof(T))
+            .Single();
+
+        var query = _sqlBuilder.BuildGetAllByIntermediateTable(
+            tableName,
+            intermediateTableName,
+            primaryKeyProperty,
+            sourceProperty,
+            targetProperty);
+
+        await using var command =
+            _dbDriver.CreateCommand(query, connection);
+
+        var convertedValue = ConvertValue(targetProperty, value);
+
+        command.Parameters.Add(_dbDriver.CreateParameter("@p0", convertedValue));
+
+        await using var reader =
+            await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken)) yield return Mapper.MapToEntity<T>(reader);
+    }
+
     public async IAsyncEnumerable<T> GetAllByColumnsAsync<T>(
-    PropertyInfo[] properties,
-    object[] values,
-    [EnumeratorCancellation] CancellationToken cancellationToken = default)
-    where T : class, new()
+        PropertyInfo?[] properties,
+        object[] values,
+        PropertyInfo? sortProperty = null,
+        SortDirection direction = SortDirection.Asc,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where T : class, new()
+    {
+        CheckFilters<T>(properties, values);
+
+        var tableName = ReflectionHelper.GetTableName<T>();
+
+        await using var connection =
+            await CreateConnectionAsync(cancellationToken);
+
+        var query = _sqlBuilder.BuildGetAllByColumns(tableName, properties, values);
+
+        if (sortProperty != null)
+            query += " " + _sqlBuilder.BuildOrderBy(sortProperty, direction);
+
+        Console.WriteLine(query);
+
+        await using var command =
+            _dbDriver.CreateCommand(query, connection);
+
+        var arguments = BuildArguments(properties, values);
+
+        for (var i = 0; i < arguments.Length; i++)
+            command.Parameters.Add(_dbDriver.CreateParameter($"@p{i}", arguments[i]));
+
+        await using var reader =
+            await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken))
+            yield return Mapper.MapToEntity<T>(reader);
+    }
+
+
+    // Вспомогательные методы
+    private object[] BuildArguments(PropertyInfo?[] properties, object[] values)
+    {
+        return properties
+            .SelectMany((property, i) => (values[i] is object[] many ? many : [values[i]])
+                .Select(value =>
+                {
+                    var isLike = properties[i]!.GetCustomAttribute<LikeAttribute>() != null;
+                    if (isLike)
+                        value = $"%{value}%";
+
+                    return ConvertValue(property!, value);
+                }))
+            .ToArray();
+    }
+
+    private static void CheckFilters<T>(PropertyInfo?[] properties,
+        object[] values)
     {
         ArgumentNullException.ThrowIfNull(properties);
         ArgumentNullException.ThrowIfNull(values);
@@ -178,38 +267,9 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
             ArgumentNullException.ThrowIfNull(values[i]);
 
             if (values[i] is object[] { Length: 0 })
-                throw new ArgumentException($"Пустой список значений для {properties[i].Name}.");
+                throw new ArgumentException($"Пустой список значений для {properties[i]!.Name}.");
 
-            ReflectionHelper.CheckProperty<T>(properties[i]);
-        }
-
-        var tableName = ReflectionHelper.GetTableName<T>();
-
-        await using var connection =
-            await CreateConnectionAsync(cancellationToken);
-
-        var query = _sqlBuilder.BuildGetAllByColumns(tableName, properties, values);
-
-        await using var command =
-            _dbDriver.CreateCommand(query, connection);
-
-        var arguments = properties
-            .SelectMany((property, i) => (values[i] is object[] many ? many : new[] { values[i] })
-                .Select(value => ConvertValue(property, value)))
-            .ToArray();
-
-        for (var i = 0; i < arguments.Length; i++)
-        {
-            command.Parameters.Add(
-                _dbDriver.CreateParameter($"@p{i}", arguments[i]));
-        }
-
-        await using var reader =
-            await command.ExecuteReaderAsync(cancellationToken);
-
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            yield return Mapper.MapToEntity<T>(reader);
+            ReflectionHelper.CheckProperty<T>(properties[i]!);
         }
     }
 
@@ -227,7 +287,7 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
             throw new ArgumentException(
                 $"Ожидалось значений ключа: {count}, получено: {id.Length}.");
     }
-    
+
     private async Task<DbConnection> CreateConnectionAsync(
         CancellationToken cancellationToken)
     {
@@ -238,10 +298,10 @@ public class OrmContext(IDbDriver dbDriver) : IOrmContext
             await connection.OpenAsync(cancellationToken);
             return connection;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await connection.DisposeAsync();
-            
+
             throw new Exception($"Не удалось открыть соединение с бд. {ex.Message}");
         }
     }

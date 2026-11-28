@@ -3,7 +3,7 @@
 namespace MiniHttpServer.HtmlTemplating.Expressions.Operands;
 
 /// <summary>
-/// Операнд-путь к свойству, разбитый на сегменты (например, "user.address.city").
+///     Операнд-путь к свойству, разбитый на сегменты (например, "user.address.city").
 /// </summary>
 public class PathOperand(string[] segments) : Operand
 {

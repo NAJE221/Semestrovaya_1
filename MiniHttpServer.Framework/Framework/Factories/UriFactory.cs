@@ -10,7 +10,7 @@ public static class UriFactory
         {
             Scheme = "http",
             Host = serverSettings.Host,
-            Port = serverSettings.Port,
+            Port = serverSettings.Port
         };
 
         return uriBuilder;

@@ -36,7 +36,9 @@ internal class ControllerHandler(
             await task;
     }
 
-    private static async Task<object[]> ParseRequestParameters(RouteDescriptor routeDescriptor, HttpListenerContext context)
+    private static async Task<object[]> ParseRequestParameters(
+        RouteDescriptor routeDescriptor,
+        HttpListenerContext context)
     {
         var request = context.Request;
         var methodParams = routeDescriptor.MethodsParams;
@@ -44,6 +46,11 @@ internal class ControllerHandler(
 
         if (request.HttpMethod.ToLower() is not ("post" or "put" or "patch"))
             return requestParameters;
+
+        const int maxLengthBody = 16 * 1024;
+
+        if (context.Request.ContentLength64 >= maxLengthBody)
+            throw new Exception("Длинна тела запроса слишком большая!");
 
         using var reader = new StreamReader(request.InputStream, request.ContentEncoding);
         var form = HttpUtility.ParseQueryString(await reader.ReadToEndAsync());
@@ -53,11 +60,9 @@ internal class ControllerHandler(
             .ToDictionary(key => key!, key => form[key]!);
 
         for (var i = 0; i < requestParameters.Length; i++)
-        {
             requestParameters[i] = methodParams[i].ParameterType == typeof(IReadOnlyDictionary<string, string>)
                 ? values
                 : form[methodParams[i].Name] ?? string.Empty;
-        }
 
         return requestParameters;
     }
